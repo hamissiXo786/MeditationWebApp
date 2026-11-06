@@ -28,7 +28,8 @@ function withGaze(def: SessionDef, gaze: string | undefined): SessionDef {
 }
 
 export default function SessionScreen() {
-  useKeepAwake();
+  // On the web the browser may refuse a wake lock; that's fine, so don't warn when releasing it.
+  useKeepAwake(undefined, { suppressDeactivateWarnings: true });
   const { id, gaze } = useLocalSearchParams<{ id: string; gaze?: string }>();
   const base = getSession(id ?? '');
   const def = useMemo(() => (base ? withGaze(base, gaze) : null), [base, gaze]);
@@ -128,7 +129,7 @@ export default function SessionScreen() {
     return (
       <Screen>
         <Text style={type.body}>Session not found.</Text>
-        <Button label="Home" onPress={() => router.replace('/')} />
+        <Button label="Home" onPress={() => router.dismissTo('/')} />
       </Screen>
     );
   }

@@ -35,6 +35,11 @@ describe('summary', () => {
     expect(headline(r)).toMatch(/steady/);
   });
 
+  it('does not call an early-ended session "steady" when there is no after reading', () => {
+    const empty = { heartRate: null, breathingRate: null, hrvRmssd: null };
+    expect(headline({ ...base, completed: false, after: empty })).toMatch(/ended before the closing check/);
+  });
+
   it('handles missing data honestly', () => {
     const empty = { heartRate: null, breathingRate: null, hrvRmssd: null };
     expect(headline({ ...base, before: empty, after: empty })).toMatch(/couldn.t get a clear reading/);

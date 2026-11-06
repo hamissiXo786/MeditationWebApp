@@ -25,7 +25,7 @@ export default function Summary() {
     return (
       <Screen>
         <Text style={type.body}>That session wasn't found.</Text>
-        <Button label="Home" onPress={() => router.replace('/')} />
+        <Button label="Home" onPress={() => router.dismissTo('/')} />
       </Screen>
     );
   }
@@ -98,7 +98,7 @@ export default function Summary() {
         measurement error are shown as steady.
       </Text>
 
-      <Button label="Done" onPress={() => router.replace('/')} testID="done" />
+      <Button label="Done" onPress={() => router.dismissTo('/')} testID="done" />
       <Button label="History" variant="ghost" onPress={() => router.replace('/history')} />
     </Screen>
   );

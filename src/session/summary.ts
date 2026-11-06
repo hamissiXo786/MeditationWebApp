@@ -48,6 +48,10 @@ export function headline(result: SessionResult): string {
   }
   if (parts.length) return parts.join(' ');
 
+  const hasAfter = changes.some((c) => c.after != null);
+  if (!result.completed && !hasAfter) {
+    return 'You ended before the closing check, so there\u2019s no after reading this time. Every minute of practice counts.';
+  }
   const hasData = changes.some((c) => c.before != null || c.after != null);
   if (!hasData) {
     return 'We couldn’t get a clear reading this time. The practice still counts.';
