@@ -1,0 +1,27 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.smartspectra'
+version = '0.1.0'
+
+android {
+  namespace "expo.modules.smartspectra"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+    minSdkVersion 28
+  }
+  lintOptions {
+    abortOnError false
+  }
+}
+
+dependencies {
+  // Presage SmartSpectra SDK (Maven Central). Requires minSdk 28, compileSdk 36.1+, AGP 8.10.1+, Kotlin 2.2.
+  implementation "com.presagetech:smartspectra:3.4.0"
+  // CameraX PreviewView used for the positioning preview.
+  implementation "androidx.camera:camera-view:1.6.0"
+  implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.10.0"
+}
