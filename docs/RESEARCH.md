@@ -86,8 +86,10 @@ Ranked by value for effort. ✅ = in this MVP.
 
 ## 5. Why React Native + Expo
 
-- One TypeScript codebase for iOS, Android and web.
-- The SDK is wrapped in a thin local Expo module, written in Swift and Kotlin (`modules/smartspectra`).
+> **Product decision (Nov 2026):** Android + web only; no iOS version. See [PROJECT_PLAN.md](PROJECT_PLAN.md).
+
+- One TypeScript codebase for Android and web.
+- The SDK is wrapped in a thin local Expo module, written in Kotlin (`modules/smartspectra`).
 - The web build runs the full experience with simulated vitals. It is useful for content, design reviews and demos, but can never show live vitals.
 
 ## Sources

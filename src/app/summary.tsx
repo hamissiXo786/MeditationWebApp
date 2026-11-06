@@ -24,7 +24,7 @@ export default function Summary() {
   if (result === null) {
     return (
       <Screen>
-        <Text style={type.body}>That session wasn't found.</Text>
+        <Text style={type.body}>That session wasn’t found.</Text>
         <Button label="Home" onPress={() => router.dismissTo('/')} />
       </Screen>
     );

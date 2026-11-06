@@ -2,6 +2,7 @@
 //   assets/audio/ambient.wav - a soft, seamlessly looping drone (16 s)
 //   assets/audio/bell.wav    - a gentle singing-bowl style chime for step changes
 // Run: node scripts/generate-audio.mjs
+import { Buffer } from 'node:buffer';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

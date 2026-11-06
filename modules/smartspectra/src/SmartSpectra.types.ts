@@ -1,7 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
 /**
- * Payloads sent from the native SmartSpectra bridge (iOS: Swift, Android: Kotlin).
+ * Payloads sent from the native SmartSpectra bridge (Android, Kotlin).
  * The native side normalises the SDK's protobuf `Metrics` into this small JSON shape so the
  * JS layer never depends on SDK-specific field names.
  *
@@ -36,8 +36,8 @@ export type NativeMetricsEvent = {
 };
 
 /**
- * Validation codes. iOS reports camelCase enum names and Android SCREAMING_SNAKE names;
- * the JS wrapper normalises both to SCREAMING_SNAKE (e.g. `NO_FACE_FOUND`).
+ * Validation codes, as Android enum names (e.g. `NO_FACE_FOUND`). The JS wrapper normalises any
+ * casing to SCREAMING_SNAKE.
  */
 export type NativeValidationEvent = {
   code: string;

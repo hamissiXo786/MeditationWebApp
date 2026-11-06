@@ -1,8 +1,5 @@
 {
-  "platforms": ["apple", "android"],
-  "apple": {
-    "modules": ["SmartSpectraModule"]
-  },
+  "platforms": ["android"],
   "android": {
     "modules": ["expo.modules.smartspectra.SmartSpectraModule"]
   }

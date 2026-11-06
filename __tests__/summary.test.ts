@@ -47,7 +47,7 @@ describe('summary', () => {
 });
 
 describe('normaliseCode', () => {
-  it('maps iOS camelCase and Android names to the same code', () => {
+  it('maps camelCase and SCREAMING_SNAKE names to the same code', () => {
     expect(normaliseCode('noFaceFound')).toBe('NO_FACE_FOUND');
     expect(normaliseCode('NO_FACE_FOUND')).toBe('NO_FACE_FOUND');
     expect(normaliseCode('ok')).toBe('OK');

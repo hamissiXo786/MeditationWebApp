@@ -7,7 +7,7 @@ import { useVitals } from '../vitals/VitalsProvider';
 /** Small live readout. Shows "–" until SmartSpectra marks a reading stable. */
 export function VitalsChip() {
   const v = useVitals();
-  const now = Date.now();
+  const now = v.updatedAt;
   const hr = trusted(v.pulseRate, now);
   const br = trusted(v.breathingRate, now);
   return (

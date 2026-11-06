@@ -3,7 +3,7 @@ import { SessionEngine, type EngineEvent } from '../src/session/engine';
 import type { SessionDef } from '../src/session/types';
 import { SimulatedVitalsSource } from '../src/vitals/simulatedSource';
 import { VitalsStore } from '../src/vitals/store';
-import { EMPTY_SNAPSHOT, type VitalsSnapshot } from '../src/vitals/types';
+import { EMPTY_SNAPSHOT, type VitalsSnapshot, type VitalsUpdate } from '../src/vitals/types';
 
 jest.useFakeTimers();
 
@@ -126,6 +126,22 @@ describe('SessionEngine', () => {
     drive(engine, 100, 5_000, (t) => snapshot(t));
     const [finished] = engine.end(5_100, snapshot(5_100));
     expect(finished.type === 'finished' && finished.result.completed).toBe(false);
+  });
+
+  it('restarts the simulated body fresh for each session (warm-up applies again)', async () => {
+    const source = new SimulatedVitalsSource({ seed: 1 });
+    const updates: VitalsUpdate[] = [];
+    source.subscribe((u) => updates.push(u));
+    await source.start();
+    for (let t = 0; t < 40_000; t += 100) source.advance(100, t);
+    expect(updates.some((u) => u.pulseRate)).toBe(true);
+    await source.stop();
+
+    updates.length = 0;
+    await source.start();
+    source.advance(100, 50_000);
+    expect(updates.some((u) => u.pulseRate)).toBe(false);
+    await source.stop();
   });
 
   it('runs the real "Arrive" session end to end against the simulated body', () => {

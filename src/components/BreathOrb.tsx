@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../theme';
@@ -11,10 +11,13 @@ export type OrbSample = { level: number; tone: 'inhale' | 'exhale' | 'neutral' }
  * waveform without re-rendering React.
  */
 export function BreathOrb({ sample, label, size = 260 }: { sample: () => OrbSample; label?: string; size?: number }) {
-  const scale = useRef(new Animated.Value(0.6)).current;
-  const exhaleOpacity = useRef(new Animated.Value(0)).current;
+  const [scale] = useState(() => new Animated.Value(0.6));
+  const [exhaleOpacity] = useState(() => new Animated.Value(0));
+  const [haloScale] = useState(() => Animated.multiply(scale, 1.12));
   const sampleRef = useRef(sample);
-  sampleRef.current = sample;
+  useEffect(() => {
+    sampleRef.current = sample;
+  }, [sample]);
 
   useEffect(() => {
     let raf = 0;
@@ -35,7 +38,7 @@ export function BreathOrb({ sample, label, size = 260 }: { sample: () => OrbSamp
 
   return (
     <View style={[styles.wrap, { width: size * 1.15, height: size * 1.15 }]} testID="breath-orb">
-      <Animated.View style={[styles.halo, circle, { transform: [{ scale: Animated.multiply(scale, 1.12) }] }]} />
+      <Animated.View style={[styles.halo, circle, { transform: [{ scale: haloScale }] }]} />
       <Animated.View style={[styles.orb, circle, { backgroundColor: colors.inhale, transform: [{ scale }] }]} />
       <Animated.View
         style={[styles.orb, circle, { backgroundColor: colors.exhale, opacity: exhaleOpacity, transform: [{ scale }] }]}

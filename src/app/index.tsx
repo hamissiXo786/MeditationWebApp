@@ -29,7 +29,7 @@ export default function Home() {
       <View style={styles.header}>
         <Text style={type.title}>Breathe with your body</Text>
         <Text style={type.small}>
-          Guided sessions that listen. Your phone's camera reads your breathing and heart rate, and the guidance adapts
+          Guided sessions that listen. Your phone’s camera reads your breathing and heart rate, and the guidance adapts
           to you.
         </Text>
         <View style={styles.row}>

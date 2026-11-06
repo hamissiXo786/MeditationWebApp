@@ -41,7 +41,7 @@ export function VitalsProvider({ children }: { children: React.ReactNode }) {
     () =>
       liveStatus === 'live'
         ? new SmartSpectraVitalsSource({ apiKey, enableTelemetry: settings.sdkTelemetry })
-        : new SimulatedVitalsSource({ startBreathingRate: 12 + Math.random() * 3, seed: Date.now() % 1000 }),
+        : new SimulatedVitalsSource(),
     [liveStatus, settings.sdkTelemetry],
   );
 

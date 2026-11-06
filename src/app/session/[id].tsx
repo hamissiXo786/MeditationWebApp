@@ -39,14 +39,16 @@ export default function SessionScreen() {
   const bell = useAudioPlayer(require('../../../assets/audio/bell.wav'));
 
   const engineRef = useRef<SessionEngine | null>(null);
-  const mirror = useRef(new BreathMirror()).current;
+  const [mirror] = useState(() => new BreathMirror());
   const done = useRef(false);
   const [view, setView] = useState<EngineView | null>(null);
   const [caption, setCaption] = useState('');
   const [showVitals, setShowVitals] = useState(false);
 
   const settingsRef = useRef(settings);
-  settingsRef.current = settings;
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
 
   const complete = useCallback(
     async (result: SessionResult) => {
@@ -85,7 +87,8 @@ export default function SessionScreen() {
     setAudioModeAsync({ playsInSilentMode: true }).catch(() => {});
     const engine = new SessionEngine(def, kind);
     engineRef.current = engine;
-    handle(engine.start(Date.now(), store.getSnapshot()));
+    // Opening events are handled on the first animation frame rather than synchronously here.
+    let pending: EngineEvent[] | null = engine.start(Date.now(), store.getSnapshot());
     if (settingsRef.current.ambient) {
       safe(() => {
         ambient.loop = true;
@@ -97,6 +100,10 @@ export default function SessionScreen() {
     let raf = 0;
     let lastUi = 0;
     const loop = () => {
+      if (pending) {
+        handle(pending);
+        pending = null;
+      }
       const now = Date.now();
       const events = engine.tick(now, store.getSnapshot());
       if (events.length) handle(events);
@@ -183,7 +190,7 @@ export default function SessionScreen() {
           {caption}
         </Text>
         {view?.signalLost ? (
-          <Text style={[type.small, styles.warn]}>Camera can't see you clearly. {hintFor(store.getSnapshot().validation)}</Text>
+          <Text style={[type.small, styles.warn]}>Camera can’t see you clearly. {hintFor(store.getSnapshot().validation)}</Text>
         ) : null}
         {showVitals ? <VitalsChip /> : null}
         <View style={styles.controls}>

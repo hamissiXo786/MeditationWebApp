@@ -52,7 +52,7 @@ export default function Setup() {
   return (
     <Screen>
       <Text style={type.title}>{session.title}</Text>
-      <Text style={type.small}>Let's get the camera a good view of you.</Text>
+      <Text style={type.small}>Let’s get the camera a good view of you.</Text>
 
       <View style={styles.preview}>
         {kind === 'smartspectra' ? (
@@ -74,7 +74,7 @@ export default function Setup() {
       </Card>
 
       <Card style={{ gap: space.sm }}>
-        <Text style={type.small}>• Prop the phone up at about arm's length. Breathing needs a steady camera.</Text>
+        <Text style={type.small}>• Prop the phone up at about arm’s length. Breathing needs a steady camera.</Text>
         <Text style={type.small}>• Face and shoulders in view, in soft, even light.</Text>
         <Text style={type.small}>• Avoid a flickering screen behind you, and stay quiet during the session.</Text>
       </Card>

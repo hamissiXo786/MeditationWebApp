@@ -9,7 +9,7 @@ export type SimulationOptions = {
   restingHeartRate?: number;
   /** Seconds (from start) at which a 4 s burst of movement happens. */
   motionAtSec?: number[];
-  /** Seed for the deterministic noise generator. */
+  /** Seed for the deterministic noise generator. Random per session when omitted. */
   seed?: number;
 };
 
@@ -30,6 +30,7 @@ export class SimulatedVitalsSource implements VitalsSource {
   private listeners = new Set<(u: VitalsUpdate) => void>();
   private timer: ReturnType<typeof setInterval> | null = null;
   private opts: Required<SimulationOptions>;
+  private options: SimulationOptions;
 
   private elapsedSec = 0;
   private breathingRate: number;
@@ -41,20 +42,42 @@ export class SimulatedVitalsSource implements VitalsSource {
   private lastReportSec = -1;
 
   constructor(options: SimulationOptions = {}) {
-    this.opts = {
-      startBreathingRate: options.startBreathingRate ?? 13,
-      startHeartRate: options.startHeartRate ?? 74,
-      restingHeartRate: options.restingHeartRate ?? 63,
-      motionAtSec: options.motionAtSec ?? [],
-      seed: options.seed ?? 7,
-    };
+    this.options = options;
+    this.opts = this.resolve(options.seed ?? 7);
     this.breathingRate = this.opts.startBreathingRate;
     this.heartRate = this.opts.startHeartRate;
     this.rng = mulberry32(this.opts.seed);
   }
 
+  /** Fill in defaults. Unspecified starting values vary per session, like a real person. */
+  private resolve(seed: number): Required<SimulationOptions> {
+    const o = this.options;
+    const vary = mulberry32(seed + 1);
+    return {
+      startBreathingRate: o.startBreathingRate ?? 12 + vary() * 3,
+      startHeartRate: o.startHeartRate ?? 70 + vary() * 8,
+      restingHeartRate: o.restingHeartRate ?? 62 + vary() * 4,
+      motionAtSec: o.motionAtSec ?? [],
+      seed,
+    };
+  }
+
+  /** Start a fresh simulated session: warm-up timing and starting values reset. */
+  private reset(seed: number) {
+    this.opts = this.resolve(seed);
+    this.elapsedSec = 0;
+    this.breathingRate = this.opts.startBreathingRate;
+    this.heartRate = this.opts.startHeartRate;
+    this.breathPhase = 0;
+    this.pacerHint = null;
+    this.lastValidation = '';
+    this.lastReportSec = -1;
+    this.rng = mulberry32(seed);
+  }
+
   async start(): Promise<void> {
     if (this.timer) return;
+    this.reset(this.options.seed ?? Date.now() % 100_000);
     this.emit({ status: 'starting' });
     this.emit({ status: 'running', validation: { code: 'OK', hint: '' } });
     this.lastValidation = 'OK';
